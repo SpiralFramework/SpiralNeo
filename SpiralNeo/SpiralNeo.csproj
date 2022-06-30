@@ -15,6 +15,11 @@
         <RobustILLink>false</RobustILLink>
     </PropertyGroup>
 
+    <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+      <PlatformTarget>x86</PlatformTarget>
+      <WarningLevel>2</WarningLevel>
+    </PropertyGroup>
+
     <ItemGroup>
         <RobustLinkRoots Include="SpiralNeo" />
         <!-- Add assemblies to be trimmed. You might need to add their dependencies too!  -->
@@ -44,6 +49,10 @@
     <ItemGroup>
         <PackageReference Include="Reloaded.Mod.Interfaces" Version="2.1.0" />
         <PackageReference Include="Reloaded.SharedLib.Hooks" Version="1.9.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Modules" />
     </ItemGroup>
 
 </Project>

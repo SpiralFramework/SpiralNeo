@@ -4,7 +4,7 @@ using System.Threading;
 
 namespace SpiralNeo.Configuration.Implementation
 {
-    public class Utilities
+    public static class Utilities
     {
         /// <param name="getValue">Function that retrieves the value.</param>
         /// <param name="timeout">The timeout in milliseconds.</param>
