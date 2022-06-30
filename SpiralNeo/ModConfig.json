@@ -1,0 +1,22 @@
+{
+  "ModId": "info.spiralframework.spiral-neo",
+  "ModName": "Spiral Neo",
+  "ModAuthor": "UnderMybrella",
+  "ModVersion": "1.0.0",
+  "ModDescription": "Spiral hooks for Danganronpa",
+  "ModDll": "SpiralNeo.dll",
+  "ModIcon": "Preview.png",
+  "ModR2RManagedDll32": "x86/SpiralNeo.dll",
+  "ModR2RManagedDll64": "x64/SpiralNeo.dll",
+  "ModNativeDll32": "",
+  "ModNativeDll64": "",
+  "IsLibrary": false,
+  "ReleaseMetadataFileName": "SpiralNeo.ReleaseMetadata.json",
+  "PluginData": {},
+  "IsUniversalMod": false,
+  "ModDependencies": [ "reloaded.sharedlib.hooks" ],
+  "OptionalDependencies": [],
+  "SupportedAppId": [
+    "dr1_us.exe"
+  ]
+}
