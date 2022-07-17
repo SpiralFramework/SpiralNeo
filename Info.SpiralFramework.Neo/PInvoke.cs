@@ -4,7 +4,6 @@ using System.Text;
 
 namespace SpiralNeo
 {
-
     public static class PInvoke
     {
         [DllImport("kernel32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
@@ -43,9 +42,21 @@ namespace SpiralNeo
             string format,
             ArgIterator args);
 
-        internal delegate void sprintf_callback(string formatted, int len);
+        [DllImport("kernel32.dll")]
+        internal static extern bool CreateSymbolicLink(
+            string lpSymlinkFileName, string lpTargetFileName, SymbolicLink dwFlags);
 
-        [DllImport("VariadicHotfix.dll", CallingConvention = CallingConvention.Cdecl)]
-        internal static extern void sprintf_to(sprintf_callback callback, int bufferSize, string format, __arglist);
+        [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
+        internal static extern bool CreateHardLink(
+            string lpFileName,
+            string lpExistingFileName,
+            IntPtr lpSecurityAttributes
+        );
+
+        internal enum SymbolicLink
+        {
+            File = 0,
+            Directory = 1
+        }
     }
 }

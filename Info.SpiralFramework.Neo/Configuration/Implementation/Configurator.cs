@@ -1,10 +1,11 @@
 ﻿using Reloaded.Mod.Interfaces;
 using System;
+using System.Diagnostics;
 using System.IO;
 
 namespace SpiralNeo.Configuration.Implementation
 {
-    public class Configurator : IConfiguratorV2
+    public class Configurator : IConfiguratorV1, IConfiguratorV2
     {
         /* Migration Guide from V1 to V2:
             - Copy this class to your V1 mod; if you use multiple config files, re-add any changes made to `MakeConfigurations`.
@@ -124,5 +125,10 @@ namespace SpiralNeo.Configuration.Implementation
         {
             ModFolder = modDirectory;
         }
+        //
+        // public void SetContext(in ConfiguratorContext context)
+        // {
+        //     throw new NotImplementedException();
+        // }
     }
 }

@@ -14,8 +14,12 @@
   "ReleaseMetadataFileName": "SpiralNeo.ReleaseMetadata.json",
   "PluginData": {},
   "IsUniversalMod": false,
-  "ModDependencies": [ "reloaded.sharedlib.hooks" ],
-  "OptionalDependencies": [],
+  "ModDependencies": [
+    "reloaded.sharedlib.hooks"
+  ],
+  "OptionalDependencies": [
+    "reloaded.universal.redirector"
+  ],
   "SupportedAppId": [
     "dr1_us.exe"
   ]

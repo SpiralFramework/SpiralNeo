@@ -17,13 +17,13 @@ namespace SpiralNeo
 
         private IReloadedHooks? _hooks;
 
-        public static VariadicHotfixer? TryLoading(IReloadedHooks hooks, ILogger logger)
+        public static VariadicHotfixer? TryLoading(Program program)
         {
-            var hotfixer = new VariadicHotfixer(hooks, logger);
+            var hotfixer = new VariadicHotfixer(program);
             return hotfixer._loadedSuccessfully ? hotfixer : null;
         }
 
-        private VariadicHotfixer(IReloadedHooks hooks, ILogger logger)
+        private VariadicHotfixer(Program program)
         {
             var loadedFrom = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) ?? "";
             var hModule = PInvoke.LoadLibrary(Path.Combine(loadedFrom, "VariadicHotfix.dll"));
@@ -31,15 +31,15 @@ namespace SpiralNeo
 
             if (hModule == IntPtr.Zero)
             {
-                logger.WriteLine(
+                program.Logger.WriteLine(
                     $"[SpiralNeo] Failed to load VariadicHotfix, error: {win32Error} (0x{win32Error:X})",
-                    logger.ColorRed);
+                    program.Logger.ColorRed);
 
                 return;
             }
 
             _loadedSuccessfully = true;
-            _hooks = hooks;
+            _hooks = program.Hooks;
 
             _sprintfTo = PInvoke.GetProcAddress(hModule, "sprintf_to");
         }
