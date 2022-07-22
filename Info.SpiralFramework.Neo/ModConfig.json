@@ -4,10 +4,10 @@
   "ModAuthor": "UnderMybrella",
   "ModVersion": "1.0.0",
   "ModDescription": "Spiral hooks for Danganronpa",
-  "ModDll": "SpiralNeo.dll",
+  "ModDll": "Info.SpiralFramework.Neo.dll",
   "ModIcon": "Preview.png",
-  "ModR2RManagedDll32": "x86/SpiralNeo.dll",
-  "ModR2RManagedDll64": "x64/SpiralNeo.dll",
+  "ModR2RManagedDll32": "x86/Info.SpiralFramework.Neo.dll",
+  "ModR2RManagedDll64": "x64/Info.SpiralFramework.Neo.dll",
   "ModNativeDll32": "",
   "ModNativeDll64": "",
   "IsLibrary": false,
@@ -15,10 +15,10 @@
   "PluginData": {},
   "IsUniversalMod": false,
   "ModDependencies": [
-    "reloaded.sharedlib.hooks"
+    "reloaded.sharedlib.hooks",
+    "reloaded.universal.redirector"
   ],
   "OptionalDependencies": [
-    "reloaded.universal.redirector"
   ],
   "SupportedAppId": [
     "dr1_us.exe"

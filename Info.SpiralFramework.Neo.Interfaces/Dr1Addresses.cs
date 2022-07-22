@@ -12,7 +12,6 @@ namespace SpiralNeo
         [DllImport("Kernel32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
         private static extern bool GetModuleHandleEx(uint dwFlags, string? lpModuleName, out IntPtr phModule);
 
-
         static Dr1Addresses()
         {
             var baseAddress = Process.GetCurrentProcess()?.MainModule?.BaseAddress;
@@ -38,6 +37,8 @@ namespace SpiralNeo
         public const int ArchiveRootOffset = 0x3405C8;
         public const int SpeakerOffset = 0x33EA44;
 
+        public const int GameStateDataOffset = 0x2E47A8;
+
         public static IntPtr LogTraceMessages => _baseAddress + LogTraceMessagesOffset;
         public static IntPtr GetFilePath => _baseAddress + GetFilePathOffset;
         public static IntPtr GetFilePathAsmFirst => _baseAddress + GetFilePathAsmFirstOffset;
@@ -46,5 +47,10 @@ namespace SpiralNeo
 
         public static IntPtr ArchiveRoot => _baseAddress + ArchiveRootOffset;
         public static IntPtr Speaker => _baseAddress + SpeakerOffset;
+
+        public static IntPtr GameStateData = _baseAddress + GameStateDataOffset;
+
+        public static IntPtr uVar6 => _baseAddress + 0x0033c6b0 + 0x38;
+        public static IntPtr bVar1 => _baseAddress + 0x002e4678;
     }
 }
