@@ -1,15 +1,15 @@
-﻿using Reloaded.Hooks.ReloadedII.Interfaces;
+﻿using System;
+using Info.SpiralFramework.Neo.Configuration;
+using Info.SpiralFramework.Neo.Configuration.Implementation;
+using Info.SpiralFramework.Neo.Modules;
+using Reloaded.Hooks.ReloadedII.Interfaces;
 using Reloaded.Mod.Interfaces;
 using Reloaded.Mod.Interfaces.Internal;
-using SpiralNeo.Configuration;
-using SpiralNeo.Configuration.Implementation;
-using System;
 using Reloaded.Universal.Redirector.Interfaces;
-using SpiralNeo.Modules;
 
-namespace SpiralNeo
+namespace Info.SpiralFramework.Neo
 {
-    public class Program : IMod, IDisposable
+    public unsafe class Program : IMod, IDisposable
     {
         /// <summary>
         /// Used for writing text to the Reloaded log.

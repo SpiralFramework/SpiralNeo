@@ -4,10 +4,9 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using Reloaded.Hooks.Definitions;
 using Reloaded.Hooks.Definitions.Enums;
-using Reloaded.Mod.Interfaces;
 using IReloadedHooks = Reloaded.Hooks.ReloadedII.Interfaces.IReloadedHooks;
 
-namespace SpiralNeo
+namespace Info.SpiralFramework.Neo
 {
 
     public class VariadicHotfixer

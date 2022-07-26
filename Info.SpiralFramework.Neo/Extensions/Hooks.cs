@@ -1,6 +1,6 @@
 ﻿using Reloaded.Hooks.Definitions;
 
-namespace SpiralNeo.Extensions;
+namespace Info.SpiralFramework.Neo.Extensions;
 
 public static class Hooks
 {

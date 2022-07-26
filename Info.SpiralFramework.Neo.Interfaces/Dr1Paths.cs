@@ -1,7 +1,7 @@
 ﻿using System.Diagnostics;
 using System.IO;
 
-namespace Info.Spiralframework.Neo.Interfaces
+namespace Info.SpiralFramework.Neo.Interfaces
 {
     public static class Dr1Paths
     {

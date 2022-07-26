@@ -1,9 +1,8 @@
 ﻿using System;
-using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using Info.SpiralFramework.Neo.Interfaces;
 
-namespace SpiralNeo.Modules;
+namespace Info.SpiralFramework.Neo.Modules;
 
 public class ConsoleCommandModule : ISpiralModule
 {
@@ -32,25 +31,28 @@ public class ConsoleCommandModule : ISpiralModule
             {
                 Console.WriteLine($"Command: {line[1..]}");
 
-                switch (line)
+                unsafe
                 {
-                    case "/speaker":
-                        Console.WriteLine($"Speaker: {Marshal.ReadInt32(Dr1Addresses.Speaker)}");
-                        break;
-                    case "/lin":
-                        var uVar6 = Marshal.ReadInt32(Dr1Addresses.uVar6);
-                        var bVar1 = Marshal.ReadByte(Dr1Addresses.bVar1 + uVar6);
-                        var cVar2 = Marshal.ReadByte(Dr1Addresses.bVar1 + 2 + uVar6);
-                        var bVar3 = Marshal.ReadByte(Dr1Addresses.bVar1 + 1 + uVar6);
-                        var puVar6 = uVar6 & 0xffffff00;
+                    switch (line)
+                    {
+                        case "/speaker":
+                            Console.WriteLine($"Speaker: {*(Dr1Addresses.Speaker)}");
+                            break;
+                        case "/lin":
+                            var uVar6 = *(Dr1Addresses.uVar6);
+                            var bVar1 = *((byte*) Dr1Addresses.bVar1 + uVar6);
+                            var cVar2 = *((byte*) Dr1Addresses.bVar1 + 2 + uVar6);
+                            var bVar3 = *((byte*) Dr1Addresses.bVar1 + 1 + uVar6);
+                            var puVar6 = uVar6 & 0xffffff00;
 
-                        Console.WriteLine($"{uVar6} / {bVar1} / {cVar2} / {bVar3} / {puVar6}");
+                            Console.WriteLine($"{uVar6} / {bVar1} / {cVar2} / {bVar3} / {puVar6}");
 
-                        break;
+                            break;
 
-                    case "/state":
+                        case "/state":
 
-                        break;
+                            break;
+                    }
                 }
             }
 

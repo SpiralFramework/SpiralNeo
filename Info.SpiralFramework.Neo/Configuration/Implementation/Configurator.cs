@@ -1,9 +1,8 @@
-﻿using Reloaded.Mod.Interfaces;
-using System;
-using System.Diagnostics;
+﻿using System;
 using System.IO;
+using Reloaded.Mod.Interfaces;
 
-namespace SpiralNeo.Configuration.Implementation
+namespace Info.SpiralFramework.Neo.Configuration.Implementation
 {
     public class Configurator : IConfiguratorV1, IConfiguratorV2
     {

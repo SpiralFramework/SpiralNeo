@@ -4,18 +4,17 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
-using System.Text;
-using Info.Spiralframework.Neo.Interfaces;
+using Info.SpiralFramework.Neo.Configuration;
+using Info.SpiralFramework.Neo.Extensions;
+using Info.SpiralFramework.Neo.Interfaces;
 using Reloaded.Hooks.Definitions;
 using Reloaded.Hooks.Definitions.Enums;
 using Reloaded.Mod.Interfaces;
 using Reloaded.Universal.Redirector.Interfaces;
-using SpiralNeo.Configuration;
-using SpiralNeo.Extensions;
 
-namespace SpiralNeo
+namespace Info.SpiralFramework.Neo.Modules
 {
-    public class IOModule : ISpiralModule
+    public unsafe class IOModule : ISpiralModule
     {
         public const string NeoModId = "info.spiralframework.spiral.neo";
 
@@ -41,6 +40,8 @@ namespace SpiralNeo
         private IAsmHook _getFilePathAsmHookSecond;
 
         private IHook<HookDelegates.ReadFile> _readFileHook;
+        private IHook<Dr1Delegates.FUN_000c5d30> _funC5D30Hook;
+        private IHook<Dr1Delegates.FUN_001ae6d0> _fun1AE6D0Hook;
 
         private WeakReference<IRedirectorController>? _redirectController;
         private Dictionary<string, string> _redirects = new();
@@ -88,6 +89,14 @@ namespace SpiralNeo
             _getFilePathAsmHookSecond = program.Hooks.CreateAsmHook(getFilePathAsmHook,
                     (long) Dr1Addresses.GetFilePathAsmSecond,
                     AsmHookBehaviour.DoNotExecuteOriginal, 86)
+                .Activate();
+
+            _funC5D30Hook = program.Hooks
+                .CreateHook<Dr1Delegates.FUN_000c5d30>(FunC5D30Impl, (long) Dr1Addresses.FUN_000c5d30)
+                .Activate();
+
+            _fun1AE6D0Hook = program.Hooks
+                .CreateHook<Dr1Delegates.FUN_001ae6d0>(FUN_001ae6d0, (long) Dr1Addresses.FUN_001ae6d0)
                 .Activate();
 
             LoadVariadicHooks(program.Hooks);
@@ -142,18 +151,19 @@ namespace SpiralNeo
             if (config.SpiralSplashEnabled)
             {
                 var splashScreen = Path.Combine(loadedFrom, "resources/ag_spiral.tga");
+                var path = "B:\\Test\\ag_spiral.png";
 
                 if (RegisteredPathRedirections.TryGetValue(Dr1Paths.SplashScreen, out var dictionary))
                 {
                     if (File.Exists(splashScreen))
-                        dictionary.TryAdd(NeoModId, ("B:\\Test\\ag_spiral.png", int.MaxValue));
+                        dictionary.TryAdd(NeoModId, (path, int.MaxValue));
                     else dictionary.Remove(NeoModId);
                 }
                 else
                 {
                     RegisteredPathRedirections[Dr1Paths.SplashScreen] = new Dictionary<string, (string, int)>
                     {
-                        [NeoModId] = ("B:\\Test\\ag_spiral.png", int.MaxValue)
+                        [NeoModId] = (path, int.MaxValue)
                     };
                 }
             }
@@ -174,12 +184,12 @@ namespace SpiralNeo
                 ?.Activate();
         }
 
-        private void TraceLogImpl(IntPtr log, int len)
+        private void TraceLogImpl(char* log, int len)
         {
-            this.Logger.WriteLine($"[AGConsole] {Marshal.PtrToStringAnsi(log, len)}", this.Logger.ColorYellowLight);
+            this.Logger.WriteLine($"[AGConsole] {new string((sbyte*) log, 0, len)}", this.Logger.ColorYellowLight);
         }
 
-        private int GetFilePathImpl(IntPtr resultBuffer, string filename, int folderIndex)
+        private unsafe int GetFilePathImpl(char* resultBuffer, string filename, int folderIndex)
         {
             var archiveRoots = new[] { "DrCommon", "Dr1", "Dr2" };
             var archiveFolderNames = new[]
@@ -188,7 +198,7 @@ namespace SpiralNeo
                 "flash", "font", "icon", "movie", "script", "voice", "texture", "save_icon"
             };
 
-            var archiveRoot = archiveRoots[Marshal.ReadInt32(Dr1Addresses.ArchiveRoot)];
+            var archiveRoot = archiveRoots[*Dr1Addresses.ArchiveRoot];
             var folder = archiveFolderNames[folderIndex - 1];
 
             var requestedFile = string.Empty;
@@ -273,7 +283,7 @@ namespace SpiralNeo
                 }
             }
 
-            Marshalling.WriteAsciiString(resultBuffer, dest);
+            UnsafeUtils.WriteAsciiString(resultBuffer, dest);
 
             this.Logger.WriteLine(
                 $"[SpiralNeo] Loading {requestedFile} @ {dest}",
@@ -282,10 +292,31 @@ namespace SpiralNeo
             return requestedFile.Length;
         }
 
-        private int ReadFileImpl(IntPtr[] resultStructure, string path)
+        private int ReadFileImpl(void* resultStructure, string path)
         {
             this.Logger.WriteLine($"[SpiralNeo] Reading File {path}");
             return _readFileHook.OriginalFunction(resultStructure, path);
+        }
+
+        private int FunC5D30Impl(string param_1, int param_2, int param_3)
+        {
+            var returnValue = _funC5D30Hook.OriginalFunction(param_1, param_2, param_3);
+
+            Logger.WriteLine($"[SpiralNeo] FUN_C5D30({param_1}, {param_2}, {param_3}) => {returnValue}");
+
+            return returnValue;
+        }
+
+        private int FUN_001ae6d0(void* self, int param_1, int param_2, void* param_3, int param_4)
+        {
+            var returnValue = _fun1AE6D0Hook.OriginalFunction(self, param_1, param_2, param_3, param_4);
+
+            var path = new string((sbyte*) *((int*) ((byte*) param_3 + 4)), 0, *((int*) param_3));
+
+            Logger.WriteLine(
+                $"[SpiralNeo] FUN_001ae6d0({(int) self}, {param_1}, {param_2}, {path}, {param_4}) => {returnValue}");
+
+            return returnValue;
         }
     }
 }

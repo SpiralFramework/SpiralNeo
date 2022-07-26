@@ -1,5 +1,4 @@
 ﻿using System.Runtime.InteropServices;
-using SpiralNeo;
 
 namespace Info.SpiralFramework.Neo.Interfaces
 {
@@ -28,116 +27,126 @@ namespace Info.SpiralFramework.Neo.Interfaces
     //     public short LogicDifficulty;
     // }
 
-    public static class Dr1GameStateData
+    public static unsafe class Dr1GameStateData
     {
         public static short TimeOfDay
         {
-            get => Marshal.ReadInt16(Dr1Addresses.GameStateData + (0 << 1));
-            set => Marshal.WriteInt16(Dr1Addresses.GameStateData + (0 << 1), value);
+            get => *(Dr1Addresses.GameStateData);
+            set => *(Dr1Addresses.GameStateData) = value;
         }
 
         public static short NameColour
         {
-            get => Marshal.ReadInt16(Dr1Addresses.GameStateData + (1 << 1));
-            set => Marshal.WriteInt16(Dr1Addresses.GameStateData + (1 << 1), value);
+            get => *(Dr1Addresses.GameStateData + 1);
+            set => *(Dr1Addresses.GameStateData + 1) = value;
         }
 
         public static short VibrationLower
         {
-            get => Marshal.ReadInt16(Dr1Addresses.GameStateData + (2 << 1));
-            set => Marshal.WriteInt16(Dr1Addresses.GameStateData + (2 << 1), value);
+            get => *(Dr1Addresses.GameStateData + 2);
+            set => *(Dr1Addresses.GameStateData + 2) = value;
         }
 
         public static short VibrationUpper
         {
-            get => Marshal.ReadInt16(Dr1Addresses.GameStateData + (3 << 1));
-            set => Marshal.WriteInt16(Dr1Addresses.GameStateData + (3 << 1), value);
+            get => *(Dr1Addresses.GameStateData + 3);
+            set => *(Dr1Addresses.GameStateData + 3) = value;
         }
 
         public static short ColourSet
         {
-            get => Marshal.ReadInt16(Dr1Addresses.GameStateData + (4 << 1));
-            set => Marshal.WriteInt16(Dr1Addresses.GameStateData + (4 << 1), value);
+            get => *(Dr1Addresses.GameStateData + 4);
+            set => *(Dr1Addresses.GameStateData + 4) = value;
         }
 
         public static short Wait
         {
-            get => Marshal.ReadInt16(Dr1Addresses.GameStateData + (5 << 1));
-            set => Marshal.WriteInt16(Dr1Addresses.GameStateData + (5 << 1), value);
+            get => *(Dr1Addresses.GameStateData + 5);
+            set => *(Dr1Addresses.GameStateData + 5) = value;
         }
 
         public static short WaitForce
         {
-            get => Marshal.ReadInt16(Dr1Addresses.GameStateData + (6 << 1));
-            set => Marshal.WriteInt16(Dr1Addresses.GameStateData + (6 << 1), value);
+            get => *(Dr1Addresses.GameStateData + 6);
+            set => *(Dr1Addresses.GameStateData + 6) = value;
         }
 
         public static short Case
         {
-            get => Marshal.ReadInt16(Dr1Addresses.GameStateData + (7 << 1));
-            set => Marshal.WriteInt16(Dr1Addresses.GameStateData + (7 << 1), value);
+            get => *(Dr1Addresses.GameStateData + 7);
+            set => *(Dr1Addresses.GameStateData + 7) = value;
         }
 
         public static short MapLoadPlayerPlacement
         {
-            get => Marshal.ReadInt16(Dr1Addresses.GameStateData + (8 << 1));
-            set => Marshal.WriteInt16(Dr1Addresses.GameStateData + (8 << 1), value);
+            get => *(Dr1Addresses.GameStateData + 8);
+            set => *(Dr1Addresses.GameStateData + 8) = value;
         }
 
         public static short SCDATA_WAK_NONSTOP_MODE_CHK
         {
-            get => Marshal.ReadInt16(Dr1Addresses.GameStateData + (9 << 1));
-            set => Marshal.WriteInt16(Dr1Addresses.GameStateData + (9 << 1), value);
+            get => *(Dr1Addresses.GameStateData + 9);
+            set => *(Dr1Addresses.GameStateData + 9) = value;
         }
+
         public static short LastUsedEvidence
         {
-            get => Marshal.ReadInt16(Dr1Addresses.GameStateData + (10 << 1));
-            set => Marshal.WriteInt16(Dr1Addresses.GameStateData + (10 << 1), value);
+            get => *(Dr1Addresses.GameStateData + 10);
+            set => *(Dr1Addresses.GameStateData + 10) = value;
         }
+
         public static short SCDATA_WAK_MAXTIME
         {
-            get => Marshal.ReadInt16(Dr1Addresses.GameStateData + (11 << 1));
-            set => Marshal.WriteInt16(Dr1Addresses.GameStateData + (11 << 1), value);
+            get => *(Dr1Addresses.GameStateData + 11);
+            set => *(Dr1Addresses.GameStateData + 11) = value;
         }
+
         public static short SkillPoints
         {
-            get => Marshal.ReadInt16(Dr1Addresses.GameStateData + (12 << 1));
-            set => Marshal.WriteInt16(Dr1Addresses.GameStateData + (12 << 1), value);
+            get => *(Dr1Addresses.GameStateData + 12);
+            set => *(Dr1Addresses.GameStateData + 12) = value;
         }
+
         public static short SCDATA_WAK_SPEAK_ADD
         {
-            get => Marshal.ReadInt16(Dr1Addresses.GameStateData + (13 << 1));
-            set => Marshal.WriteInt16(Dr1Addresses.GameStateData + (13 << 1), value);
+            get => *(Dr1Addresses.GameStateData + 13);
+            set => *(Dr1Addresses.GameStateData + 13) = value;
         }
+
         public static short SCDATA_WAK_RANDOM
         {
-            get => Marshal.ReadInt16(Dr1Addresses.GameStateData + (14 << 1));
-            set => Marshal.WriteInt16(Dr1Addresses.GameStateData + (14 << 1), value);
+            get => *(Dr1Addresses.GameStateData + 14);
+            set => *(Dr1Addresses.GameStateData + 14) = value;
         }
+
         public static short Gamemode
         {
-            get => Marshal.ReadInt16(Dr1Addresses.GameStateData + (15 << 1));
-            set => Marshal.WriteInt16(Dr1Addresses.GameStateData + (15 << 1), value);
+            get => *(Dr1Addresses.GameStateData + 15);
+            set => *(Dr1Addresses.GameStateData + 15) = value;
         }
+
         public static short SCDATA_WAK_MONOKUMA_MEDAL
         {
-            get => Marshal.ReadInt16(Dr1Addresses.GameStateData + (16 << 1));
-            set => Marshal.WriteInt16(Dr1Addresses.GameStateData + (16 << 1), value);
+            get => *(Dr1Addresses.GameStateData + 16);
+            set => *(Dr1Addresses.GameStateData + 16) = value;
         }
+
         public static short UnlockedRulePages
         {
-            get => Marshal.ReadInt16(Dr1Addresses.GameStateData + (17 << 1));
-            set => Marshal.WriteInt16(Dr1Addresses.GameStateData + (17 << 1), value);
+            get => *(Dr1Addresses.GameStateData + 17);
+            set => *(Dr1Addresses.GameStateData + 17) = value;
         }
+
         public static short ActionDifficulty
         {
-            get => Marshal.ReadInt16(Dr1Addresses.GameStateData + (18 << 1));
-            set => Marshal.WriteInt16(Dr1Addresses.GameStateData + (18 << 1), value);
+            get => *(Dr1Addresses.GameStateData + 18);
+            set => *(Dr1Addresses.GameStateData + 18) = value;
         }
+
         public static short LogicDifficulty
         {
-            get => Marshal.ReadInt16(Dr1Addresses.GameStateData + (19 << 1));
-            set => Marshal.WriteInt16(Dr1Addresses.GameStateData + (19 << 1), value);
+            get => *(Dr1Addresses.GameStateData + 19);
+            set => *(Dr1Addresses.GameStateData + 19) = value;
         }
     }
 }

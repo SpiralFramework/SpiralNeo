@@ -2,7 +2,7 @@
 using System.Diagnostics;
 using System.Threading;
 
-namespace SpiralNeo.Configuration.Implementation
+namespace Info.SpiralFramework.Neo.Configuration.Implementation
 {
     public static class Utilities
     {

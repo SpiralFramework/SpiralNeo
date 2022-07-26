@@ -1,7 +1,7 @@
-﻿using SpiralNeo.Configuration.Implementation;
-using System.ComponentModel;
+﻿using System.ComponentModel;
+using Info.SpiralFramework.Neo.Configuration.Implementation;
 
-namespace SpiralNeo.Configuration
+namespace Info.SpiralFramework.Neo.Configuration
 {
     public class Config : Configurable<Config>
     {

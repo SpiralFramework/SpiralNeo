@@ -9,6 +9,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "VariadicHotfix", "VariadicH
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Info.SpiralFramework.Neo.Interfaces", "Info.SpiralFramework.Neo.Interfaces\Info.SpiralFramework.Neo.Interfaces.csproj", "{F7CA38D3-8EA2-4751-8E3F-0F60AC1E8E41}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Info.SpiralFramework.Neo.Discord", "Info.SpiralFramework.Neo.Discord\Info.SpiralFramework.Neo.Discord.csproj", "{175826B8-0AC5-4433-A69D-DF77FC7E920A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -54,6 +56,18 @@ Global
 		{F7CA38D3-8EA2-4751-8E3F-0F60AC1E8E41}.Release|x64.Build.0 = Release|Any CPU
 		{F7CA38D3-8EA2-4751-8E3F-0F60AC1E8E41}.Release|x86.ActiveCfg = Release|Any CPU
 		{F7CA38D3-8EA2-4751-8E3F-0F60AC1E8E41}.Release|x86.Build.0 = Release|Any CPU
+		{175826B8-0AC5-4433-A69D-DF77FC7E920A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{175826B8-0AC5-4433-A69D-DF77FC7E920A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{175826B8-0AC5-4433-A69D-DF77FC7E920A}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{175826B8-0AC5-4433-A69D-DF77FC7E920A}.Debug|x64.Build.0 = Debug|Any CPU
+		{175826B8-0AC5-4433-A69D-DF77FC7E920A}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{175826B8-0AC5-4433-A69D-DF77FC7E920A}.Debug|x86.Build.0 = Debug|Any CPU
+		{175826B8-0AC5-4433-A69D-DF77FC7E920A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{175826B8-0AC5-4433-A69D-DF77FC7E920A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{175826B8-0AC5-4433-A69D-DF77FC7E920A}.Release|x64.ActiveCfg = Release|Any CPU
+		{175826B8-0AC5-4433-A69D-DF77FC7E920A}.Release|x64.Build.0 = Release|Any CPU
+		{175826B8-0AC5-4433-A69D-DF77FC7E920A}.Release|x86.ActiveCfg = Release|Any CPU
+		{175826B8-0AC5-4433-A69D-DF77FC7E920A}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

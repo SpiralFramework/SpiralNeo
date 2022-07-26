@@ -2,6 +2,11 @@
 
     <PropertyGroup>
         <TargetFramework>net5.0</TargetFramework>
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     </PropertyGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Reloaded.Hooks.Definitions" Version="1.11.0" />
+    </ItemGroup>
 
 </Project>

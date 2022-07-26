@@ -1,17 +1,16 @@
-﻿using System;
-using Reloaded.Hooks.Definitions.X86;
+﻿using Reloaded.Hooks.Definitions.X86;
 
-namespace SpiralNeo
+namespace Info.SpiralFramework.Neo
 {
     public static class HookDelegates
     {
         [Function(CallingConventions.Cdecl)]
-        public delegate void TraceLog(IntPtr log, int len);
+        public unsafe delegate void TraceLog(char* log, int len);
 
         [Function(CallingConventions.Cdecl)]
-        public delegate int GetFilePath(IntPtr resultBuffer, string filename, int folder);
+        public unsafe delegate int GetFilePath(char* resultBuffer, string filename, int folder);
 
         [Function(CallingConventions.Cdecl)]
-        public delegate int ReadFile(IntPtr[] resultStructure, string path);
+        public unsafe delegate int ReadFile(void* resultStructure, string path);
     }
 }

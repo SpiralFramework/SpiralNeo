@@ -1,7 +1,7 @@
 ﻿using System;
-using SpiralNeo.Configuration;
+using Info.SpiralFramework.Neo.Configuration;
 
-namespace SpiralNeo;
+namespace Info.SpiralFramework.Neo.Modules;
 
 public interface ISpiralModule : IDisposable
 {
