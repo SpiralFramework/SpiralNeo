@@ -9,7 +9,7 @@ using Reloaded.Universal.Redirector.Interfaces;
 
 namespace Info.SpiralFramework.Neo
 {
-    public unsafe class Program : IMod, IDisposable
+    public class Program : IMod, IDisposable
     {
         /// <summary>
         /// Used for writing text to the Reloaded log.
@@ -44,13 +44,15 @@ namespace Info.SpiralFramework.Neo
 
         internal IOModule IOModule = null!;
         internal ConsoleCommandModule ConsoleCommandModule = null!;
+        internal ScriptingModule ScriptingModule = null!;
 
         internal ISpiralModule[] Modules = null!;
+        internal ImGuiSupport ImGuiSupport = null!;
 
         /// <summary>
         /// Entry point for your mod.
         /// </summary>
-        public void StartEx(IModLoaderV1 loaderApi, IModConfigV1 modConfig)
+        public async void StartEx(IModLoaderV1 loaderApi, IModConfigV1 modConfig)
         {
             try
             {
@@ -63,6 +65,8 @@ namespace Info.SpiralFramework.Neo
                 ModLoader.GetController<IReloadedHooks>().TryGetTarget(out Hooks!);
                 Redirects = ModLoader.GetController<IRedirectorController>();
 
+                ImGuiSupport = await ImGuiSupport.Create(this);
+
                 // Your config file is in Config.json.
                 // Need a different name, format or more configurations? Modify the `Configurator`.
                 // If you do not want a config, remove Configuration folder and Config class.
@@ -74,11 +78,14 @@ namespace Info.SpiralFramework.Neo
                 Hotfixer = VariadicHotfixer.TryLoading(this);
                 IOModule = new IOModule(this, Hotfixer);
                 ConsoleCommandModule = new ConsoleCommandModule(this);
+                ScriptingModule = new ScriptingModule(this, Hotfixer);
 
                 Modules = new ISpiralModule[]
                 {
-                    IOModule, ConsoleCommandModule
+                    IOModule, ConsoleCommandModule, ScriptingModule
                 };
+
+                loaderApi.OnModLoaderInitialized += OnModLoaderInitialised;
 
                 Console.ReadLine();
             }
@@ -115,6 +122,7 @@ namespace Info.SpiralFramework.Neo
             */
 
             foreach (var module in Modules) module.Suspend();
+           ImGuiSupport.Suspend();
         }
 
         public void Resume()
@@ -126,6 +134,7 @@ namespace Info.SpiralFramework.Neo
             */
 
             foreach (var module in Modules) module.Resume();
+            ImGuiSupport.Resume();
         }
 
         public void Unload()
@@ -137,6 +146,7 @@ namespace Info.SpiralFramework.Neo
             */
 
             foreach (var module in Modules) module.Unload();
+            ImGuiSupport.Unload();
         }
 
         public void Dispose()
@@ -144,6 +154,7 @@ namespace Info.SpiralFramework.Neo
             GC.SuppressFinalize(this);
 
             foreach (var module in Modules) module.Dispose();
+            ImGuiSupport.Dispose();
         }
 
         /*  If CanSuspend == false, suspend and resume button are disabled in Launcher and Suspend()/Resume() will never be called.
@@ -154,5 +165,11 @@ namespace Info.SpiralFramework.Neo
 
         /* Automatically called by the mod loader when the mod is about to be unloaded. */
         public Action Disposing => Dispose;
+        
+        /* Mod Loader Actions */
+        private void OnModLoaderInitialised()
+        {
+            foreach (var module in this.Modules) module.OnModLoaderInitialised();
+        }
     }
 }

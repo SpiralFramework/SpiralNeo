@@ -4,14 +4,19 @@ using Info.SpiralFramework.Neo.Interfaces;
 
 namespace Info.SpiralFramework.Neo.Modules;
 
+using Extensions;
+
 public class ConsoleCommandModule : ISpiralModule
 {
     private Task _consoleLoop;
     private bool _running = true;
 
+    private Program _program;
+
     public ConsoleCommandModule(Program program)
     {
         this._consoleLoop = Task.Run(Run);
+        this._program = program;
     }
 
     public void Dispose()
@@ -39,18 +44,26 @@ public class ConsoleCommandModule : ISpiralModule
                             Console.WriteLine($"Speaker: {*(Dr1Addresses.Speaker)}");
                             break;
                         case "/lin":
-                            var uVar6 = *(Dr1Addresses.uVar6);
-                            var bVar1 = *((byte*) Dr1Addresses.bVar1 + uVar6);
-                            var cVar2 = *((byte*) Dr1Addresses.bVar1 + 2 + uVar6);
-                            var bVar3 = *((byte*) Dr1Addresses.bVar1 + 1 + uVar6);
-                            var puVar6 = uVar6 & 0xffffff00;
-
-                            Console.WriteLine($"{uVar6} / {bVar1} / {cVar2} / {bVar3} / {puVar6}");
+                            // var uVar6 = *(Dr1Addresses.uVar6);
+                            // var bVar1 = *((byte*) Dr1Addresses.bVar1 + uVar6);
+                            // var cVar2 = *((byte*) Dr1Addresses.bVar1 + 2 + uVar6);
+                            // var bVar3 = *((byte*) Dr1Addresses.bVar1 + 1 + uVar6);
+                            // var puVar6 = uVar6 & 0xffffff00;
+                            //
+                            // Console.WriteLine($"{uVar6} / {bVar1} / {cVar2} / {bVar3} / {puVar6}");
 
                             break;
 
                         case "/state":
 
+                            break;
+
+                        case "/clear":
+                            MemoryExt.ClearUnicodeStringPointer(Dr1Addresses.TextBuffer);
+                            break;
+
+                        case "/load chapter_1_trial":
+                            this._program.ScriptingModule.LoadScript(1, 100, 0);
                             break;
                     }
                 }

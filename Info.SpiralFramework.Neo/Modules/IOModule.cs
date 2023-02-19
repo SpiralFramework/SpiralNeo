@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
+using DearImguiSharp;
 using Info.SpiralFramework.Neo.Configuration;
 using Info.SpiralFramework.Neo.Extensions;
 using Info.SpiralFramework.Neo.Interfaces;
@@ -28,8 +29,8 @@ namespace Info.SpiralFramework.Neo.Modules
 
         public Dictionary<string, Dictionary<string, ValueTuple<string, int>>> RegisteredPathRedirections = new();
 
-        internal readonly ILogger Logger;
-        internal readonly VariadicHotfixer? Hotfixer;
+        private readonly ILogger _logger;
+        private readonly VariadicHotfixer? _hotfixer;
 
         private IAsmHook? _traceLogAsmHook;
         private IReverseWrapper<HookDelegates.TraceLog>? _traceLogReverseWrapper;
@@ -50,8 +51,8 @@ namespace Info.SpiralFramework.Neo.Modules
 
         public IOModule(Program program, VariadicHotfixer? hotfixer)
         {
-            this.Logger = program.Logger;
-            this.Hotfixer = hotfixer;
+            this._logger = program.Logger;
+            this._hotfixer = hotfixer;
             this._redirectController = program.Redirects;
 
             _getFilePathHook = program.Hooks
@@ -144,73 +145,70 @@ namespace Info.SpiralFramework.Neo.Modules
             }
         }
 
-        private void CheckNeoPaths(Config config)
+        public void RegisterPath(string gamePath, string modId, string replacementPath, int weight)
         {
-            var loadedFrom = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) ?? "";
-
-            if (config.SpiralSplashEnabled)
+            this._logger.WriteLine(
+                $"[SpiralNeo] Trying to register a replacement {gamePath} => ({modId},{weight}) {replacementPath}");
+            if (RegisteredPathRedirections.TryGetValue(gamePath, out var dictionary))
             {
-                var splashScreen = Path.Combine(loadedFrom, "resources/ag_spiral.tga");
-                var path = "B:\\Test\\ag_spiral.png";
-
-                if (RegisteredPathRedirections.TryGetValue(Dr1Paths.SplashScreen, out var dictionary))
-                {
-                    if (File.Exists(splashScreen))
-                        dictionary.TryAdd(NeoModId, (path, int.MaxValue));
-                    else dictionary.Remove(NeoModId);
-                }
+                if (File.Exists(replacementPath))
+                    dictionary.TryAdd(modId, (replacementPath, weight));
                 else
-                {
-                    RegisteredPathRedirections[Dr1Paths.SplashScreen] = new Dictionary<string, (string, int)>
-                    {
-                        [NeoModId] = (path, int.MaxValue)
-                    };
-                }
+                    dictionary.Remove(modId);
             }
             else
             {
-                if (RegisteredPathRedirections.TryGetValue(Dr1Paths.SplashScreen, out var dictionary))
-                    dictionary.Remove(NeoModId);
+                RegisteredPathRedirections[gamePath] = new Dictionary<string, (string, int)>
+                {
+                    [modId] = (replacementPath, weight)
+                };
             }
+        }
+
+        public void DeregisterPath(string gamePath, string modId)
+        {
+            if (RegisteredPathRedirections.TryGetValue(gamePath, out var dictionary))
+                dictionary.Remove(modId);
+        }
+
+        private void CheckNeoPaths(Config config)
+        {
+            var loadedFrom =
+                "B:\\Danganronpa\\Mod Data"; //Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) ?? "";
+
+            if (config.SpiralSplashEnabled)
+                RegisterPath(Dr1Paths.SplashScreen, NeoModId, Path.Combine(loadedFrom, "ag_spiral.tga"),
+                    int.MaxValue);
+            else
+                DeregisterPath(Dr1Paths.SplashScreen, NeoModId);
+
+            RegisterPath("Dr1/data/us/script/e00_001_000.lin", NeoModId,
+                Path.Combine(loadedFrom, "e00_001_000.lin"), int.MaxValue);
         }
 
         private void LoadVariadicHooks(IReloadedHooks hooks)
         {
-            if (this.Hotfixer is null) return;
+            if (this._hotfixer is null) return;
 
             _traceLogReverseWrapper = hooks.CreateReverseWrapper<HookDelegates.TraceLog>(this.TraceLogImpl);
-            _traceLogAsmHook = this.Hotfixer
+            _traceLogAsmHook = this._hotfixer
                 .CreateSPrintfToHook(_traceLogReverseWrapper, (long) Dr1Addresses.LogTraceMessages)
                 ?.Activate();
         }
 
         private void TraceLogImpl(char* log, int len)
         {
-            this.Logger.WriteLine($"[AGConsole] {new string((sbyte*) log, 0, len)}", this.Logger.ColorYellowLight);
+            // this.Logger.WriteLine($"[AGConsole] {new string((sbyte*) log, 0, len)}", this.Logger.ColorYellowLight);
         }
 
         private unsafe int GetFilePathImpl(char* resultBuffer, string filename, int folderIndex)
         {
-            var archiveRoots = new[] { "DrCommon", "Dr1", "Dr2" };
-            var archiveFolderNames = new[]
-            {
-                "bin", "cg", "flash", "model", "modelbg", "module", "se", "texture", "texture/low", "bin", "cg",
-                "flash", "font", "icon", "movie", "script", "voice", "texture", "save_icon"
-            };
+            var archiveRoot = ArchiveRoots[*Dr1Addresses.ArchiveRoot];
+            var folder = ArchiveFolderNames[folderIndex - 1];
 
-            var archiveRoot = archiveRoots[*Dr1Addresses.ArchiveRoot];
-            var folder = archiveFolderNames[folderIndex - 1];
-
-            var requestedFile = string.Empty;
-
-            if (folderIndex is >= 10 and < 20)
-            {
-                requestedFile = $"{archiveRoot}/data/us/{folder}/{filename}";
-            }
-            else
-            {
-                requestedFile = $"{archiveRoot}/data/all/{folder}/{filename}";
-            }
+            var requestedFile = folderIndex is >= 10 and < 20
+                ? $"{archiveRoot}/data/us/{folder}/{filename}"
+                : $"{archiveRoot}/data/all/{folder}/{filename}";
 
             var dest = $"archive:{requestedFile}";
             var tmpPath = $"neo_tmp/{requestedFile}";
@@ -248,6 +246,7 @@ namespace Info.SpiralFramework.Neo.Modules
                             var key = Path.GetFullPath(Path.Combine(_tempFilePath, requestedFile));
                             var path = Path.GetFullPath(modPath);
 
+                            _logger.WriteLine($"Adding redirect! {key} => {path}");
                             controller.AddRedirect(key, path);
                             this._redirects.TryAdd(requestedFile, path);
 
@@ -266,7 +265,7 @@ namespace Info.SpiralFramework.Neo.Modules
                                 if (!PInvoke.CreateHardLink(link, path, IntPtr.Zero))
                                 {
                                     var error = Marshal.GetLastWin32Error();
-                                    Logger.WriteLine($"Could not create hard link: {error} (0x{error:X})");
+                                    _logger.WriteLine($"Could not create hard link: {error} (0x{error:X})");
 
                                     File.Copy(path, link);
                                 }
@@ -283,18 +282,20 @@ namespace Info.SpiralFramework.Neo.Modules
                 }
             }
 
+
+            this._logger.WriteLine($"[SpiralNeo:GetFilePath] Requesting {requestedFile} => {dest}");
             UnsafeUtils.WriteAsciiString(resultBuffer, dest);
 
-            this.Logger.WriteLine(
-                $"[SpiralNeo] Loading {requestedFile} @ {dest}",
-                this.Logger.ColorPink);
+            // this.Logger.WriteLine(
+            // $"[SpiralNeo] Loading {requestedFile} @ {dest}",
+            // this.Logger.ColorPink);
 
             return requestedFile.Length;
         }
 
         private int ReadFileImpl(void* resultStructure, string path)
         {
-            this.Logger.WriteLine($"[SpiralNeo] Reading File {path}");
+            this._logger.WriteLine($"[SpiralNeo] Reading File {path}");
             return _readFileHook.OriginalFunction(resultStructure, path);
         }
 
@@ -302,7 +303,7 @@ namespace Info.SpiralFramework.Neo.Modules
         {
             var returnValue = _funC5D30Hook.OriginalFunction(param_1, param_2, param_3);
 
-            Logger.WriteLine($"[SpiralNeo] FUN_C5D30({param_1}, {param_2}, {param_3}) => {returnValue}");
+            _logger.WriteLine($"[SpiralNeo] FUN_C5D30({param_1}, {param_2}, {param_3}) => {returnValue}");
 
             return returnValue;
         }
@@ -313,10 +314,18 @@ namespace Info.SpiralFramework.Neo.Modules
 
             var path = new string((sbyte*) *((int*) ((byte*) param_3 + 4)), 0, *((int*) param_3));
 
-            Logger.WriteLine(
-                $"[SpiralNeo] FUN_001ae6d0({(int) self}, {param_1}, {param_2}, {path}, {param_4}) => {returnValue}");
+            // Logger.WriteLine(
+            // $"[SpiralNeo] FUN_001ae6d0({(int) self}, {param_1}, {param_2}, {path}, {param_4}) => {returnValue}");
 
             return returnValue;
+        }
+
+        private bool _isOpen = true;
+
+        public void Render()
+        {
+            // Logger.WriteLine($"[SpiralNeo] WantCaptureMouse {ImGui.GetIO().WantCaptureMouse}");
+            // ImGui.ShowDemoWindow(ref _isOpen);
         }
     }
 }
