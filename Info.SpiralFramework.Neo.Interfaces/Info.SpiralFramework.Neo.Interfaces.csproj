@@ -1,12 +1,13 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net5.0</TargetFramework>
+        <TargetFramework>net7.0</TargetFramework>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+        <Nullable>enable</Nullable>
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="Reloaded.Hooks.Definitions" Version="1.11.0" />
+      <PackageReference Include="Reloaded.Hooks.Definitions" Version="1.14.0" />
     </ItemGroup>
 
 </Project>

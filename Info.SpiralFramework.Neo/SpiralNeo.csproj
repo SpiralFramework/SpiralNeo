@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net5.0-windows</TargetFramework>
+        <TargetFramework>net7.0-windows</TargetFramework>
         <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
         <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
         <LangVersion>preview</LangVersion>
@@ -55,12 +55,16 @@
     </ItemGroup>
 
     <ItemGroup>
+        <PackageReference Include="Reloaded.Imgui.Hook.Direct3D11" Version="1.0.1" />
+        <PackageReference Include="Reloaded.Imgui.Hook.Direct3D9" Version="1.0.2" />
+        <PackageReference Include="Reloaded.Memory" Version="8.1.0" />
         <PackageReference Include="Reloaded.Mod.Interfaces" Version="2.3.0" />
         <PackageReference Include="Reloaded.SharedLib.Hooks" Version="1.9.0" />
         <PackageReference Include="Reloaded.Universal.Redirector.Interfaces" Version="1.1.0" />
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\Info.SpiralFramework.Neo.Formats\Info.SpiralFramework.Neo.Formats.csproj" />
       <ProjectReference Include="..\Info.Spiralframework.Neo.Interfaces\Info.Spiralframework.Neo.Interfaces.csproj" />
     </ItemGroup>
 
